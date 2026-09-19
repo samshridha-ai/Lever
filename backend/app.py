@@ -10,7 +10,11 @@ from services.ml_service import predict, risk_for, explain, feature_json, load_m
 from services.intervention_service import recommendations
 
 app = Flask(__name__); app.config.update(SECRET_KEY=SECRET_KEY, SESSION_COOKIE_SAMESITE='Lax')
-CORS(app, supports_credentials=True, origins=['http://localhost:5173','http://127.0.0.1:5173'])
+CORS(app, supports_credentials=True, origins=[
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'https://lever-pi-eight.vercel.app'
+])
 init_db()
 def error(message, code=400): return jsonify(error=message), code
 def current():
