@@ -16,6 +16,31 @@ CORS(app, supports_credentials=True, origins=[
     'https://lever-pi-eight.vercel.app'
 ])
 init_db()
+def bootstrap_faculty():
+    email = "teacher@lever.com"
+    password = "Teacher123!"
+
+    with connect() as db:
+        existing = db.execute(
+            "SELECT id FROM users WHERE email=?",
+            (email,)
+        ).fetchone()
+
+        if existing:
+            return
+
+        password_hash = generate_password_hash(password)
+
+        db.execute(
+            """
+            INSERT INTO users
+            (name, email, password_hash, role)
+            VALUES (?, ?, ?, 'faculty')
+            """,
+            ("Lever Faculty", email, password_hash)
+        )
+
+bootstrap_faculty()
 def error(message, code=400): return jsonify(error=message), code
 def current():
     uid=session.get('user_id')
